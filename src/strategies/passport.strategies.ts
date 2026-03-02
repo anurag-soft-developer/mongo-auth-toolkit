@@ -1,11 +1,11 @@
-import passport from 'passport';
-import { Strategy as LocalStrategy } from 'passport-local';
-import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
-import { IUserDoc, IUserModel } from '../types';
+import passport from "passport";
+import { Strategy as LocalStrategy } from "passport-local";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import { IUserModel } from "../types";
 
 export class AuthStrategies {
   private userModel: IUserModel;
-  
+
   constructor(userModel: IUserModel) {
     this.userModel = userModel;
   }
@@ -15,37 +15,41 @@ export class AuthStrategies {
     passport.use(
       new LocalStrategy(
         {
-          usernameField: 'email',
-          passwordField: 'password',
+          usernameField: "email",
+          passwordField: "password",
         },
         async (email: string, password: string, done) => {
           try {
             const user = await this.userModel.findByEmail(email);
-            
+
             if (!user) {
-              return done(null, false, { message: 'Invalid email or password' });
+              return done(null, false, {
+                message: "Invalid email or password",
+              });
             }
-            
+
             if (!user.isActive) {
-              return done(null, false, { message: 'Account is deactivated' });
+              return done(null, false, { message: "Account is deactivated" });
             }
-            
+
             const isValidPassword = await user.comparePassword(password);
-            
+
             if (!isValidPassword) {
-              return done(null, false, { message: 'Invalid email or password' });
+              return done(null, false, {
+                message: "Invalid email or password",
+              });
             }
-            
+
             // Update last login
             user.lastLogin = new Date();
             await user.save();
-            
+
             return done(null, user);
           } catch (error) {
             return done(error);
           }
-        }
-      )
+        },
+      ),
     );
   }
 
@@ -64,11 +68,13 @@ export class AuthStrategies {
         },
         async (accessToken, refreshToken, profile, done) => {
           try {
-            let user = await this.userModel.findByOAuthId('google', profile.id);
-            
+            let user = await this.userModel.findByOAuthId("google", profile.id);
+
             if (user) {
               // Update last login and tokens
-              const oAuthStrategy = user.oAuthStrategies.find(s => s.provider === 'google' && s.id === profile.id);
+              const oAuthStrategy = user.oAuthStrategies.find(
+                (s) => s.provider === "google" && s.id === profile.id,
+              );
               if (oAuthStrategy) {
                 oAuthStrategy.accessToken = accessToken;
                 oAuthStrategy.refreshToken = refreshToken;
@@ -77,18 +83,18 @@ export class AuthStrategies {
               await user.save();
               return done(null, user);
             }
-            
+
             const email = profile.emails?.[0]?.value;
             if (email) {
               user = await this.userModel.findByEmail(email);
               if (user) {
                 // Link Google account to existing user
                 user.oAuthStrategies.push({
-                  provider: 'google',
+                  provider: "google",
                   id: profile.id,
                   accessToken: accessToken,
                   refreshToken: refreshToken,
-                  createdAt: new Date()
+                  createdAt: new Date(),
                 });
                 user.lastLogin = new Date();
                 if (!user.avatar && profile.photos?.[0]?.value) {
@@ -98,21 +104,20 @@ export class AuthStrategies {
                 return done(null, user);
               }
             }
-            
-            
-            user = await this.userModel.createWithOAuth('google', profile, {
+
+            user = await this.userModel.createWithOAuth("google", profile, {
               accessToken,
-              refreshToken
+              refreshToken,
             });
             user.lastLogin = new Date();
             await user.save();
-            
+
             return done(null, user);
           } catch (error) {
             return done(error);
           }
-        }
-      )
+        },
+      ),
     );
   }
 
@@ -140,7 +145,7 @@ export class AuthStrategies {
   }): void {
     this.configureLocalStrategy();
     this.configureSerialization();
-    
+
     if (googleConfig) {
       this.configureGoogleStrategy(googleConfig);
     }

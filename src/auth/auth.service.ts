@@ -19,12 +19,12 @@ import {
 import { AuthMiddleware, createAuthMiddleware } from "../middleware";
 
 export class AuthService {
-  private config: AuthConfig;
-  private userModel: IUserModel;
-  private authUtils: AuthUtils;
-  private authStrategies: AuthStrategies;
-  private authMiddleware: AuthMiddleware;
-  private hooks: UserHooks;
+  config: AuthConfig;
+  userModel: IUserModel;
+  authUtils: AuthUtils;
+  authStrategies: AuthStrategies;
+  authMiddleware: AuthMiddleware;
+  hooks: UserHooks;
 
   constructor(config: AuthConfig) {
     this.config = config;
@@ -204,17 +204,5 @@ export class AuthService {
 
   getPassport(): typeof passport {
     return passport;
-  }
-
-  getMiddleware(): AuthMiddleware {
-    return this.authMiddleware;
-  }
-
-  getUserModel(): IUserModel {
-    return this.userModel;
-  }
-
-  getAuthUtils(): AuthUtils {
-    return this.authUtils;
   }
 }

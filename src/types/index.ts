@@ -66,6 +66,7 @@ export interface IUser {
   avatar?: string;
   isActive: boolean;
   isVerified: boolean;
+  isEmailVerified: boolean;
   lastLogin?: string;
   createdAt: string;
   updatedAt: string;

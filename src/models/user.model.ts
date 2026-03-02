@@ -65,6 +65,10 @@ const defaultUserSchema = new Schema<IUserDoc>(
       type: Boolean,
       default: false,
     },
+    isEmailVerified: {
+      type: Boolean,
+      default: false,
+    },
     lastLogin: {
       type: Date,
     },
@@ -164,7 +168,7 @@ function assignMethods(defaultUserSchema: Schema<IUserDoc>) {
       firstName: profile.name?.givenName,
       lastName: profile.name?.familyName,
       avatar: profile.photos?.[0]?.value,
-      isVerified: profile.emails?.[0]?.verified || false,
+      isEmailVerified: profile.emails?.[0]?.verified || false,
     };
 
     return this.create(userData);

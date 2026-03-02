@@ -35,7 +35,7 @@ export class AuthMiddleware {
 
   // JWT Authentication middleware
   authenticate = async (
-    req: AuthRequest,
+    req: Request,
     res: Response,
     next: NextFunction,
   ): Promise<void> => {
@@ -110,7 +110,7 @@ export class AuthMiddleware {
       return;
     }
 
-    if (!req.user.isVerified) {
+    if (!req.user.isEmailVerified) {
       res.status(403).json({ error: "Email verification required" });
       return;
     }
