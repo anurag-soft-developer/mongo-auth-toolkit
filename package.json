@@ -1,5 +1,5 @@
 {
-  "name": "@your-scope/auth-toolkit",
+  "name": "mongo-auth-toolkit",
   "version": "1.0.0",
   "description": "A comprehensive authentication toolkit for Node.js backend services supporting Google OAuth, email/password auth with extensible user models and CRUD callbacks",
   "main": "dist/index.js",
@@ -23,7 +23,7 @@
     "google-oauth",
     "email-password"
   ],
-  "author": "",
+  "author": "Anurag Dhurwey (anurag.system.dev@gmail.com)",
   "license": "MIT",
   "repository": {
     "type": "git",
