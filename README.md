@@ -2,6 +2,8 @@
 
 A comprehensive authentication toolkit for Node.js backend services supporting Google OAuth, email/password authentication, and extensible user models with CRUD callbacks.
 
+> ⚠️ **Under Development**: This project is currently under active development. APIs and features may change without notice.
+
 ## Features
 - Google OAuth 2.0 authentication
 - Email/password authentication
